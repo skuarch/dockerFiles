@@ -1,0 +1,41 @@
+#glassfish
+docker build --no-cache=true -f dockerfile-glassfish4-java8 -t skuarch/glassfish4-java8 .
+docker run --name glassfish4-java8 -i -t -p 8080:8080 -p 4848:4848 -c 4 --net=host -m 4096M  -v /opt/glassfish4:/opt/glassfish4 skuarch/glassfish4-java8
+
+
+#apache-php
+docker run --name apache2-php5 -i -t -p 80:80 -c 4 --net=host -m 4096M -v /var/www/html:/var/www/html skuarch/apache2-php5
+
+
+
+
+#curl -L -O -H "Cookie: oraclelicense=accept-securebackup-cookie" -k "https://edelivery.oracle.com/otn-pub/java/jdk/8u60-b27/jdk-8u60-linux-x64.tar.gz"
+
+
+
+
+FROM ubuntu:14.04
+
+MAINTAINER skuarch <skuarch@yahoo.com.mx>
+
+VOLUME ["/opt/glassfish4/","/opt/glassfish4/"]
+WORKDIR /opt/glassfish4/
+
+ENV DEBIAN_FRONTEND noninteractive
+
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections 
+RUN apt-get update     
+
+RUN mkdir /usr/lib/jvm/
+RUN chmod 777 -R /usr/lib/jvm/
+
+ADD /usr/lib/jvm/jdk1.8.0_51/ /usr/lib/jvm/jdk1.8.0_51/
+RUN chmod 777 -R /usr/lib/jvm/jdk1.8.0_51/
+
+ADD /opt/glassfish4/ /opt/glassfish4
+RUN chmod 777 -R /opt/glassfish4/
+
+EXPOSE 8080
+EXPOSE 4848
+
+CMD ["/opt/glassfish4/glassfish/bin/./asadmin", "start-domain"]

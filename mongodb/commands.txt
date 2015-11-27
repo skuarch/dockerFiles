@@ -1,0 +1,3 @@
+docker build --no-cache --rm=true -f Dockerfile-mongodb -t skuarch/mongodb .
+docker run -d -p 28017:28017 -p 27017:27017 --name mongodb skuarch/mongodb
+docker start mongodb

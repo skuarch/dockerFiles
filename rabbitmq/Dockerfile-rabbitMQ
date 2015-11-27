@@ -1,0 +1,19 @@
+FROM ubuntu:14.04
+
+MAINTAINER skuarch <skuarch@yahoo.com.mx>
+
+ENV DEBIAN_FRONTEND noninteractive
+
+ADD rabbitmq-start /usr/local/bin/
+
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections && \
+    apt-get update && \    
+    apt-get install rabbitmq-server -y -f && \
+    rabbitmq-plugins enable rabbitmq_management && \        
+    chmod +x /usr/local/bin/rabbitmq-start && \
+    /etc/init.d/rabbitmq-server restart
+
+CMD ["rabbitmq-start"]
+
+EXPOSE 5672
+EXPOSE 15672

@@ -1,0 +1,13 @@
+FROM ubuntu:14.04
+
+MAINTAINER skuarch <skuarch@yahoo.com.mx>
+
+ENV DEBIAN_FRONTEND noninteractive
+
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections && \
+    apt-get update && \    
+    apt-get install mysql-server -y -f    
+
+EXPOSE 3306
+
+CMD ["tail", "-100f", "/var/log/mysql.log"]
